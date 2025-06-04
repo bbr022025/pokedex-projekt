@@ -170,3 +170,95 @@ Okay, so that worked. Now to try to explain what happened.
    5. Finally, I alter the src-attribute of that variable to the data relevant to Ditto from the API.
    6. Well, I also just console.log the data from the API, but that's not very important.
 3. Finally, I call the fetchDitto-function, it then does what I told it to do, and an image of Ditto is generated.
+
+### Fourth try
+
+I tried to add some new datapoints: name and type.
+
+```JS
+
+async function fetchDitto() {
+  let dittoCall = await fetch("https://pokeapi.co/api/v2/pokemon/ditto");
+  let data = await dittoCall.json();
+  let dittoImage = document.createElement("img");
+  let dittoName = document.createElement("h2");
+  let dittoType = document.createElement("h3");
+  pokedex.appendChild(dittoImage);
+  pokedex.appendChild(dittoName);
+  pokedex.appendChild(dittoType);
+
+  dittoImage.setAttribute("src", data.sprites.front_default);
+  dittoName.textContent += `${data.name}`;
+  dittoType.textContent += `${data.types.type.name}`;
+  console.log(data);
+}
+
+```
+
+This runs into the issue that I use:
+
+```JS
+dittoType.textContent += `${data.types.type.name}`;
+```
+
+That doesn't work because I'm trying to take text content from an array (types). It actually needs to be something like:
+
+```JS
+dittoType.textContent += `${data.types[0].type.name}`;
+```
+
+Now I'm telling it that I want to grab the type.name from the first list of the array. Probably.. I might want to loop through the types-array, because other Pokemon might have several types... That'll be on a future to-do list, when I generalize the function to work for all Pokémon.
+
+Also added HTML and CSS:
+
+- the first letter is defined in uppercase using pseudo-classes
+- The imported objects are aligned to the center (cc = center center) using utility classes.
+
+#### HTML
+
+- flex and cc add flexbox and center items along both main axes.
+- Added some minimal in-line styling just for ease of viewing.
+  - Can add this via CSS later.
+
+```HTML
+  <body class="flex cc">
+    <div id="pokedex" class="flex column cc" style="gap: 0.5rem"></div>
+  </body>
+```
+
+#### CSS
+
+- Added a border so I can see boxes without inspecting.
+- Added utility classes to center boxes.
+- Added a pseudo-element to tweak Pokémon names from API.
+
+```CSS
+* {
+  border: 1px solid red;
+  }
+
+/* ----------------- */
+/*  UTILITY CLASSES  */
+/* ----------------- */
+
+.flex {
+  display: flex;
+}
+
+.cc {
+  justify-content: center;
+  align-items: center;
+}
+
+.column {
+    flex-direction: column;
+}
+
+/* ------------ */
+/*     BODY     */
+/* ------------ */
+
+h2::first-letter {
+  text-transform: uppercase;
+}
+```
