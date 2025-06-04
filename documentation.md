@@ -262,3 +262,20 @@ h2::first-letter {
   text-transform: uppercase;
 }
 ```
+
+#### Fifth try
+
+Added a new fetch to get Ditto's flavor text and appended a paragraph where its flavor text is inputted.
+
+```JS
+
+let dittoFlavor = await fetch("https://pokeapi.co/api/v2/pokemon-species/ditto");
+
+let dittoDescription = document.createElement("p");
+pokedex.appendChild(dittoDescription);
+
+dittoDescription.textContent += `${flavor.flavor_text_entries[0].flavor_text}`;
+
+```
+
+**Vurdere å legge til en width på 15 rem for å få teksten til å se bra ut, i tillegg til text-wrap: balance.**

@@ -11,17 +11,24 @@ let pokedex = document.querySelector("#pokedex");
 image to #pokedex. */
 async function fetchDitto() {
   let dittoCall = await fetch("https://pokeapi.co/api/v2/pokemon/ditto");
+  let dittoFlavor = await fetch(
+    "https://pokeapi.co/api/v2/pokemon-species/ditto"
+  );
   let data = await dittoCall.json();
+  let flavor = await dittoFlavor.json();
   let dittoImage = document.createElement("img");
   let dittoName = document.createElement("h2");
   let dittoType = document.createElement("h3");
+  let dittoDescription = document.createElement("p");
   pokedex.appendChild(dittoImage);
   pokedex.appendChild(dittoName);
   pokedex.appendChild(dittoType);
+  pokedex.appendChild(dittoDescription);
 
   dittoImage.setAttribute("src", data.sprites.front_default);
   dittoName.textContent += `${data.name}`;
   dittoType.textContent += `${data.types[0].type.name}`;
+  dittoDescription.textContent += `${flavor.flavor_text_entries[0].flavor_text}`;
   console.log(data);
 }
 
