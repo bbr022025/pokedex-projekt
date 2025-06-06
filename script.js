@@ -1,52 +1,82 @@
-/* First attempt: just make a variable to fetch the data of a pokemon, then log the data.
-Issue: 
-*/
-
-// ```JS ```;
-
+// ----------------------------------------------
 // Selects #pokedex and assign it to a variable.
+// ----------------------------------------------
+
 let pokedex = document.querySelector("#pokedex");
+// -----------------------------------------------------
+// Define a function to get and store data from the APIs.
+// -----------------------------------------------------
 
-/* Define a function to get data from the API and append an
-image to #pokedex. */
-async function fetchDitto() {
-  let dittoCall = await fetch("https://pokeapi.co/api/v2/pokemon/ditto");
-  let dittoFlavor = await fetch(
-    "https://pokeapi.co/api/v2/pokemon-species/ditto"
+async function fetchPokemonData(pokemon) {
+  let pokemonCall = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`);
+  let pokemonFlavor = await fetch(
+    `https://pokeapi.co/api/v2/pokemon-species/${pokemon}`
   );
-  let data = await dittoCall.json();
-  let flavor = await dittoFlavor.json();
-  let dittoImage = document.createElement("img");
-  let dittoName = document.createElement("h2");
-  let dittoType = document.createElement("h3");
-  let dittoDescription = document.createElement("p");
-  pokedex.appendChild(dittoImage);
-  pokedex.appendChild(dittoName);
-  pokedex.appendChild(dittoType);
-  pokedex.appendChild(dittoDescription);
-
-  dittoImage.setAttribute("src", data.sprites.front_default);
-  dittoName.textContent += `${data.name}`;
-  dittoType.textContent += `${data.types[0].type.name}`;
-  dittoDescription.textContent += `${flavor.flavor_text_entries[0].flavor_text}`;
-  console.log(data);
+  let callData = await pokemonCall.json();
+  let flavorData = await pokemonFlavor.json();
+  return { callData, flavorData };
 }
 
-fetchDitto();
+// -------------------------------------------------------------------
+// Define a function to create elements and append them to the website
+// -------------------------------------------------------------------
 
-// let data = await fetch("https://pokeapi.co/api/v2/pokemon/ditto");
-// console.log(data);
+function appendPokemon(callData, flavorData) {
+  // ---------------------------------------------
+  // Create elements for the website.
+  // ---------------------------------------------
 
-// async function fetchUserData() {
-//   try {
-//     let response = await fetch("https://jsonplaceholder.typicode.com/users/1");
-//     let data = await response.json();
-//     console.log(data);
-//   } catch (error) {
-//     console.error("Feil ved henting av data", error);
-//   }
-// }
+  let pokemonImage = document.createElement("img");
+  let pokemonName = document.createElement("h2");
+  let pokemonType = document.createElement("h3");
+  let pokemonDescription = document.createElement("p");
 
-// fetchUserData();
+  // ---------------------------------------------
+  // Append the elements to the website
+  // ---------------------------------------------
 
-console.log("JS connected!");
+  pokedex.appendChild(pokemonImage);
+  pokedex.appendChild(pokemonName);
+  pokedex.appendChild(pokemonType);
+  pokedex.appendChild(pokemonDescription);
+
+  // ---------------------------------------------------------
+  // Use data from the APIs to set attributes for the elements
+  // ---------------------------------------------------------
+
+  pokemonImage.setAttribute("src", callData.sprites.front_default);
+  pokemonName.textContent += `${callData.name}`;
+  pokemonType.textContent += `${callData.types[0].type.name}`;
+  pokemonDescription.textContent += `${flavorData.flavor_text_entries[0].flavor_text}`;
+}
+
+// ---------------------------------------------------------------------
+// Define a function to get data from the APIs and append it to #pokedex
+// ---------------------------------------------------------------------
+
+async function displayPokemon(pokemon) {
+  let { callData, flavorData } = await fetchPokemonData(pokemon);
+  appendPokemon(callData, flavorData);
+}
+
+// ---------------------------------------------------------------------------
+// A function that churns out a given number of Pokémon if you feed it an ID.
+// Must be ameliorated to account for strings as well.
+// ---------------------------------------------------------------------------
+function pokemonPump(initialPokemon, finalPokemon) {
+  for (let i = initialPokemon; i <= finalPokemon; i++) {
+    displayPokemon(i);
+  }
+}
+pokemonPump(1, 3);
+
+// displayPokemon(1);
+// displayPokemon(2);
+// displayPokemon(3);
+// displayPokemon(4);
+// displayPokemon(5);
+// displayPokemon(6);
+// displayPokemon(7);
+// displayPokemon(8);
+// displayPokemon(9);
+// displayPokemon(10);

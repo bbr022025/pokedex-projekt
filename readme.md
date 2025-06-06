@@ -263,7 +263,7 @@ h2::first-letter {
 }
 ```
 
-#### Fifth try
+### Fifth try
 
 Added a new fetch to get Ditto's flavor text and appended a paragraph where its flavor text is inputted.
 
@@ -278,4 +278,191 @@ dittoDescription.textContent += `${flavor.flavor_text_entries[0].flavor_text}`;
 
 ```
 
-**Vurdere å legge til en width på 15 rem for å få teksten til å se bra ut, i tillegg til text-wrap: balance.**
+- [ ] **Vurdere å legge til en width på 15 rem for å få teksten til å se bra ut, i tillegg til text-wrap: balance.**
+- [ ] Ta en nøyere titt på Andy Bell's CSS-reset iht. bilder/tekst.
+
+## Step 3
+
+Generaliser funksjonen til å ta inn en hvilken som helst Pokémon.
+
+### Step 3a
+
+Generaliserte funksjonen og la inn (overdrevet mange) kommentarer.
+
+- [ ] Oversette kommentarer til engelsk & kjøre tekstkorrektur.
+- [ ] Forenkle mine stream of consciousness-kommentarer.
+
+```JS
+
+// ----------------------------------------------
+// Selects #pokedex and assign it to a variable.
+// ----------------------------------------------
+
+let pokedex = document.querySelector("#pokedex");
+
+// ---------------------------------------------------------------------
+// Define a function to get data from the APIs and append it to #pokedex
+// ---------------------------------------------------------------------
+
+async function fetchPokemon(pokemon) {
+  // -------------------------------------------------------------------------------------
+  // fetching data from the APIs
+  // -------------------------------------------------------------------------------------
+
+  let pokemonCall = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`);
+  let pokemonFlavor = await fetch(
+    `https://pokeapi.co/api/v2/pokemon-species/${pokemon}`
+  );
+
+  // -------------------------------------------------------------------------------------
+  // Store the data.
+  // ---------------------------------------------
+
+  let callData = await pokemonCall.json();
+  let flavorData = await pokemonFlavor.json();
+
+  // ---------------------------------------------
+  // Create elements for the website.
+  // ---------------------------------------------
+
+  let pokemonImage = document.createElement("img");
+  let pokemonName = document.createElement("h2");
+  let pokemonType = document.createElement("h3");
+  let pokemonDescription = document.createElement("p");
+
+  // ---------------------------------------------
+  // Append the elements to the website
+  // ---------------------------------------------
+
+  pokedex.appendChild(pokemonImage);
+  pokedex.appendChild(pokemonName);
+  pokedex.appendChild(pokemonType);
+  pokedex.appendChild(pokemonDescription);
+
+  // ---------------------------------------------------------
+  // Use data from the APIs to set attributes for the elements
+  // ---------------------------------------------------------
+
+  pokemonImage.setAttribute("src", callData.sprites.front_default);
+  pokemonName.textContent += `${callData.name}`;
+  pokemonType.textContent += `${callData.types[0].type.name}`;
+  pokemonDescription.textContent += `${flavorData.flavor_text_entries[0].flavor_text}`;
+}
+
+```
+
+### Step 3b - First try
+
+Call the function and make it display the first ten Pokémon in the **simplest** possible way.
+
+```JS
+
+fetchPokemon(1);
+fetchPokemon(2);
+fetchPokemon(3);
+fetchPokemon(4);
+fetchPokemon(5);
+fetchPokemon(6);
+fetchPokemon(7);
+fetchPokemon(8);
+fetchPokemon(9);
+fetchPokemon(10);
+
+```
+
+**Issue:** Each call finishes at different times since they're async functions, so the Pokémon won't display in order.
+
+**Insight**: _Async functions might need some kind of timeout when they rely on other async functions._
+
+### Step 3b - Second try
+
+This time I'll try to use a loop. Instructor suggests getting used to making several small functions
+and not be tempted to make one big function.
+
+- Fetch som egen funksjon
+- Use data from the APIs to set attributes for the elements som egen funksjon.
+- **Use do at some point to show evolution chains?**
+
+### Steb 3b - Third try
+
+Okay, so I tried to create more functions, and I also have a function that displays the range of Pokémon I want to display, based on ID. Downside is that it doesn't take strings (yet). ChatGPT suggests the following improvements:
+
+1. 🔄 Improve handling of non-English text
+2. 🛑 Prevent broken layout on fetch errors
+3. 🧪 Optional: Accept names (strings) in pokemonPump
+
+```JS
+
+// ----------------------------------------------
+// Selects #pokedex and assign it to a variable.
+// ----------------------------------------------
+
+let pokedex = document.querySelector("#pokedex");
+// -----------------------------------------------------
+// Define a function to get and store data from the APIs.
+// -----------------------------------------------------
+
+async function fetchPokemonData(pokemon) {
+  let pokemonCall = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`);
+  let pokemonFlavor = await fetch(
+    `https://pokeapi.co/api/v2/pokemon-species/${pokemon}`
+  );
+  let callData = await pokemonCall.json();
+  let flavorData = await pokemonFlavor.json();
+  return { callData, flavorData };
+}
+
+// -------------------------------------------------------------------
+// Define a function to create elements and append them to the website
+// -------------------------------------------------------------------
+
+function appendPokemon(callData, flavorData) {
+  // ---------------------------------------------
+  // Create elements for the website.
+  // ---------------------------------------------
+
+  let pokemonImage = document.createElement("img");
+  let pokemonName = document.createElement("h2");
+  let pokemonType = document.createElement("h3");
+  let pokemonDescription = document.createElement("p");
+
+  // ---------------------------------------------
+  // Append the elements to the website
+  // ---------------------------------------------
+
+  pokedex.appendChild(pokemonImage);
+  pokedex.appendChild(pokemonName);
+  pokedex.appendChild(pokemonType);
+  pokedex.appendChild(pokemonDescription);
+
+  // ---------------------------------------------------------
+  // Use data from the APIs to set attributes for the elements
+  // ---------------------------------------------------------
+
+  pokemonImage.setAttribute("src", callData.sprites.front_default);
+  pokemonName.textContent += `${callData.name}`;
+  pokemonType.textContent += `${callData.types[0].type.name}`;
+  pokemonDescription.textContent += `${flavorData.flavor_text_entries[0].flavor_text}`;
+}
+
+// ---------------------------------------------------------------------
+// Define a function to get data from the APIs and append it to #pokedex
+// ---------------------------------------------------------------------
+
+async function displayPokemon(pokemon) {
+  let { callData, flavorData } = await fetchPokemonData(pokemon);
+  appendPokemon(callData, flavorData);
+}
+
+// ---------------------------------------------------------------------------
+// A function that churns out a given number of Pokémon if you feed it an ID.
+// Must be ameliorated to account for strings as well.
+// ---------------------------------------------------------------------------
+function pokemonPump(initialPokemon, finalPokemon) {
+  for (let i = initialPokemon; i <= finalPokemon; i++) {
+    displayPokemon(i);
+  }
+}
+pokemonPump(1, 3);
+
+```
