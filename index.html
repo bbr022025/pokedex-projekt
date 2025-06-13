@@ -7,7 +7,20 @@
     <link rel="stylesheet" href="style.css" />
     <script src="script.js" defer></script>
   </head>
-  <body class="flex cc">
-    <div id="pokedex" class="flex column cc" style="gap: 0.5rem"></div>
+  <body class="flex cc column gap1">
+    <img
+      src="./img/bg-image.jpg"
+      style="
+        z-index: -1;
+        height: 100vh;
+        width: 100vw;
+        position: absolute;
+        display: block;
+      "
+    />
+    <div id="pokedex" class="flex cc box"></div>
+    <div id="pokeGallery" class="flex cc column box"></div>
   </body>
 </html>
+
+<!-- Instructor suggests adding another div and then appending search and searchbar to pokemonappend. -->

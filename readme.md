@@ -466,3 +466,33 @@ function pokemonPump(initialPokemon, finalPokemon) {
 pokemonPump(1, 3);
 
 ```
+
+## Step 4
+
+- Add a search bar that parces integers as well as strings.
+
+  - Find a method that filters strings based on search parameters: type, element, rarity etc.
+
+  ### First try
+
+  Tried to create a search function that fulfills the criteria:
+
+  ```JS
+  function searchInput() {
+  let searchPokemon = document.createElement("input");
+  inputElement.value = search;
+  inputElement.placeholder = "Enter Pokémon name or ID!";
+  inputElement.addEventListener("input", () => (search = inputElement.value));
+  return inputElement;
+  }
+  ```
+
+  Things I did wrong:
+
+  - Inconsistent naming conventions.
+
+  ## Second try
+
+  Create a function to output Pokémon from the search function.
+
+  

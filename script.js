@@ -3,6 +3,37 @@
 // ----------------------------------------------
 
 let pokedex = document.querySelector("#pokedex");
+let gallery = document.querySelector("#pokeGallery");
+
+// ------------------------------------
+// An input field to search for Pokémon
+// ------------------------------------
+
+function searchPokemon() {
+  let searchInput = document.createElement("input");
+  searchInput.value = "";
+  searchInput.placeholder = "Enter Pokémon name or ID!";
+  searchInput.addEventListener("input", () => {
+    search = searchInput.value;
+  });
+  return searchInput;
+}
+
+// ----------------------------
+// An button to activate search
+// ----------------------------
+
+function searchButton() {
+  let pokeButton = document.createElement("button");
+  pokeButton.setAttribute("class", "button");
+  pokeButton.textContent = "Search";
+  pokeButton.addEventListener("click", async () => {
+    pokeGallery.innerHTML = "";
+    await displayPokemon(search);
+  });
+  return pokeButton;
+}
+
 // -----------------------------------------------------
 // Define a function to get and store data from the APIs.
 // -----------------------------------------------------
@@ -35,10 +66,12 @@ function appendPokemon(callData, flavorData) {
   // Append the elements to the website
   // ---------------------------------------------
 
-  pokedex.appendChild(pokemonImage);
-  pokedex.appendChild(pokemonName);
-  pokedex.appendChild(pokemonType);
-  pokedex.appendChild(pokemonDescription);
+  pokeGallery.append(
+    pokemonImage,
+    pokemonName,
+    pokemonType,
+    pokemonDescription
+  );
 
   // ---------------------------------------------------------
   // Use data from the APIs to set attributes for the elements
@@ -68,15 +101,7 @@ function pokemonPump(initialPokemon, finalPokemon) {
     displayPokemon(i);
   }
 }
-pokemonPump(1, 3);
 
-// displayPokemon(1);
-// displayPokemon(2);
-// displayPokemon(3);
-// displayPokemon(4);
-// displayPokemon(5);
-// displayPokemon(6);
-// displayPokemon(7);
-// displayPokemon(8);
-// displayPokemon(9);
-// displayPokemon(10);
+// Display everything
+pokedex.append(searchPokemon());
+pokedex.append(searchButton());

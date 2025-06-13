@@ -6,7 +6,7 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  border: 1px solid red;
+  /* border: 1px solid red; */
 }
 
 body {
@@ -22,6 +22,7 @@ button,
 input,
 label {
   line-height: 1.1;
+  font-family: var(--font-basic);
 }
 
 h1,
@@ -64,9 +65,14 @@ a {
 /* CUSTOM PROPERTIES */
 /* ----------------- */
 
-/* COLORS */
+:root {
+  /* COLORS */
+  --color-background: antiquewhite;
 
-/* FONTS */
+  /* FONTS */
+
+  --font-basic: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+}
 
 /* ----------------- */
 /*  UTILITY CLASSES  */
@@ -85,12 +91,43 @@ a {
   flex-direction: column;
 }
 
+.gap1 {
+  gap: 1rem;
+}
+
+.box {
+  padding: 1.4rem;
+  gap: 0.5rem;
+  border-radius: 2rem;
+  overflow: hidden;
+  background: rgba(250, 235, 215, 0.31);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(250, 235, 215, 0.3);
+}
+
+.opacity8 {
+  opacity: 0.8;
+}
+
 /* ------------ */
 /*     BODY     */
 /* ------------ */
 
+body {
+  background-image: url(./img/rocio-salado-loadbg.jpg);
+}
+
 h2::first-letter {
   text-transform: uppercase;
+}
+
+input {
+  border-radius: 2rem;
+  padding: 0.3rem;
+  font-family: sans-serif;
 }
 
 /* ------------ */
@@ -100,6 +137,54 @@ h2::first-letter {
 /* ------------ */
 /*     MAIN     */
 /* ------------ */
+
+.button {
+  /* basic setup */
+  --button-padding: 0.7rem 1.2rem;
+  --button-gap: 0.5em;
+  --button-bg: #edb458;
+  --button-color: #dd1155;
+  --button-hover-bg: #e8871e, 0.8;
+  --button-hover-color: #880044;
+  --button-border-width: 0.2rem;
+  --button-border-style: solid;
+  --button-border-color: var(--button-bg);
+  --button-radius: 2rem;
+  --button-filter: blur(5px);
+
+  /* layout */
+  display: inline-flex;
+  align-items: center;
+  gap: var(--button-gap);
+  padding: var(--button-padding);
+
+  /* colors */
+  background: var(--button-bg);
+  color: var(--button-color);
+  backdrop-filter: var(--button-filter);
+
+  /* width-radius */
+  border-width: var(--button-border-width);
+  border-style: var(--button-border-style);
+  border-color: var(--button-border-color);
+  border-radius: var(--button-radius);
+
+  /* Typography */
+  text-decoration: none;
+  font-weight: var(--button-font-weight, 700);
+  font-size: var(--button-font-size, 1em);
+  letter-spacing: 0.05ch;
+  font-family: sans-serif;
+  line-height: 1.1;
+
+  /* MOST IMPORTANT!!! */
+  cursor: pointer;
+}
+
+.button:hover {
+  background: var(--button-hover-bg);
+  color: var(--button-hover-color);
+}
 
 /* --------------------- */
 /*      MEDIA QUERIES    */
